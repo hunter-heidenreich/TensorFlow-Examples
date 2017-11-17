@@ -112,7 +112,7 @@ def inputs(eval_data, data_dir, batch_size):
     if not tf.gfile.Exists(f):
       raise ValueError('Failed to find file: ' + f)
 
-  filename_queue = tf.train.string_input_produce(filenames)
+  filename_queue = tf.train.string_input_producer(filenames)
 
   read_input = read_cifar10(filename_queue)
   reshaped_image = tf.cast(read_input.uint8image, tf.float32)
@@ -123,7 +123,7 @@ def inputs(eval_data, data_dir, batch_size):
   resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image,
                                                           height, width)
 
-  float_image = tf.image.per_image_standarization(resized_image)
+  float_image = tf.image.per_image_standardization(resized_image)
 
   float_image.set_shape([height, width, 3])
   read_input.label.set_shape([1])

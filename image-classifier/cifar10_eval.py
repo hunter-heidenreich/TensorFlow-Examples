@@ -1,4 +1,6 @@
 from datetime import datetime
+import math
+import time
 
 import numpy as np
 import tensorflow as tf
@@ -40,7 +42,7 @@ def eval_once(saver, summary_writer, top_k_op, summary_op):
     coord = tf.train.Coordinator()
     try:
       threads = []
-      for qr in tf.get_collections(tf.GraphKeys.QUEUE_RUNNERS):
+      for qr in tf.get_collection(tf.GraphKeys.QUEUE_RUNNERS):
         threads.extend(qr.create_threads(sess, coord=coord, daemon=True,
                                         start=True))
 
@@ -78,7 +80,7 @@ def evaluate():
     
     variable_averages = tf.train.ExponentialMovingAverage(
       cifar10.MOVING_AVERAGE_DECAY)
-    variables_to_restore = variables_averages.variables_to_restore()
+    variables_to_restore = variable_averages.variables_to_restore()
     saver = tf.train.Saver(variables_to_restore)
     
     summary_op = tf.summary.merge_all()
@@ -86,7 +88,8 @@ def evaluate():
     summary_writer = tf.summary.FileWriter(FLAGS.eval_dir, g)
     
     while True:
-      eval_once(saver, summary_writerm top_k_op, summary_op)
+      print("TRUE BITCH")
+      eval_once(saver, summary_writer, top_k_op, summary_op)
       if FLAGS.run_once:
         break
       time.sleep(FLAGS.eval_interval_secs)
@@ -99,4 +102,6 @@ def main(argv=None):
   tf.gfile.MakeDirs(FLAGS.eval_dir)
   evaluate()
 
-
+if __name__ == '__main__':
+  FLAGS = parser.parse_args()
+  tf.app.run()
